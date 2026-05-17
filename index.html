@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animal Ball Shooter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; font-family: sans-serif; }
+    canvas { display: block; }
+
+    #overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem; cursor: pointer; user-select: none;
+    }
+    #overlay h1 { font-size: 2.5rem; letter-spacing: 2px; }
+    #overlay .hint { opacity: 0.6; font-size: 0.9rem; }
+    #overlay.hidden { display: none; }
+
+    /* HUD */
+    #hud {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: none;
+      padding: 14px 20px;
+      pointer-events: none;
+    }
+    #hud.visible { display: flex; justify-content: space-between; align-items: flex-start; }
+    .hud-block { color: #fff; text-shadow: 0 1px 4px #000; }
+    .hud-label { font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .hud-value { font-size: 1.6rem; font-weight: bold; line-height: 1; }
+
+    /* HP bar */
+    #hud-hp-bar {
+      width: 160px; height: 12px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    #hud-hp-fill {
+      height: 100%; width: 100%;
+      background: #4cdb6a;
+      border-radius: 6px;
+      transition: width 0.2s, background 0.3s;
+    }
+
+    /* Экран смерти */
+    #death-screen {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1.2rem;
+    }
+    #death-screen h1 { font-size: 3rem; color: #ff4444; }
+    #death-screen .score-line { font-size: 1.3rem; opacity: 0.8; }
+    #death-screen button {
+      margin-top: 0.5rem;
+      padding: 0.7rem 2.2rem;
+      font-size: 1.1rem;
+      background: #fff; color: #000;
+      border: none; border-radius: 8px;
+      cursor: pointer; font-weight: bold;
+    }
+    #death-screen button:hover { background: #ddd; }
+    #death-screen.hidden { display: none; }
+
+    /* Прицел */
+    #crosshair {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px; height: 20px;
+      pointer-events: none; display: none;
+    }
+    #crosshair::before, #crosshair::after {
+      content: ''; position: absolute; background: rgba(255,255,255,0.85);
+    }
+    #crosshair::before { width: 2px; height: 100%; left: 50%; transform: translateX(-50%); }
+    #crosshair::after  { width: 100%; height: 2px; top: 50%;  transform: translateY(-50%); }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <h1>Animal Ball Shooter</h1>
+    <p id="overlay-msg">Нажмите, чтобы начать</p>
+    <p class="hint">WASD — движение &nbsp;|&nbsp; Мышь — прицел &nbsp;|&nbsp; ЛКМ — выстрел &nbsp;|&nbsp; Пробел — прыжок &nbsp;|&nbsp; Esc — пауза</p>
+  </div>
+
+  <div id="hud">
+    <div class="hud-block">
+      <div class="hud-label">Счёт</div>
+      <div class="hud-value" id="hud-score">0</div>
+    </div>
+    <div class="hud-block" style="text-align:center">
+      <div class="hud-label">Здоровье</div>
+      <div id="hud-hp-bar"><div id="hud-hp-fill"></div></div>
+    </div>
+    <div class="hud-block" style="text-align:right">
+      <div class="hud-label">Врагов</div>
+      <div class="hud-value" id="hud-enemies">0</div>
+    </div>
+  </div>
+
+  <div id="death-screen" class="hidden">
+    <h1>Вы погибли</h1>
+    <p class="score-line">Счёт: <strong id="death-score">0</strong></p>
+    <button id="restart-btn">Играть снова</button>
+  </div>
+
+  <div id="crosshair"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
