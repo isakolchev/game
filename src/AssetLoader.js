@@ -8,8 +8,8 @@ function loadGLTF(url) {
 
 export async function loadAssets() {
   const [rabbit, level] = await Promise.all([
-    loadGLTF('/assets/models/animals/rabbit.glb'),
-    loadGLTF('/assets/models/environment/level.glb'),
+    loadGLTF(import.meta.env.BASE_URL + 'assets/models/animals/rabbit.glb'),
+    loadGLTF(import.meta.env.BASE_URL + 'assets/models/environment/level.glb'),
   ])
   return { rabbit, level }
 }
